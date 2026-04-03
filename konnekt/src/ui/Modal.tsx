@@ -3,10 +3,11 @@ import { useEffect, useCallback } from 'react';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  accent?: string;
   children: React.ReactNode;
 }
 
-export function Modal({ isOpen, onClose, children }: Props) {
+export function Modal({ isOpen, onClose, accent, children }: Props) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -37,6 +38,10 @@ export function Modal({ isOpen, onClose, children }: Props) {
       aria-modal="true"
       aria-label="Connect wallet"
     >
+      {/* Glow behind modal */}
+      {accent && accent !== 'transparent' && (
+        <div className="kkt-glow" style={{ background: accent }} />
+      )}
       <div className="kkt-modal">{children}</div>
     </div>
   );

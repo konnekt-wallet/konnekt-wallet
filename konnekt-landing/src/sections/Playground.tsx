@@ -35,10 +35,6 @@ function IconCheck({ color = '#4ADE80' }: { color?: string }) { return (<svg wid
 function IconAlert() { return (<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4L3 23H25L14 4Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 10V16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="14" cy="19.5" r="1" fill="currentColor"/></svg>); }
 function IconEmpty() { return (<svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="4" stroke="currentColor" strokeWidth="1.5"/><path d="M4 14H28" stroke="currentColor" strokeWidth="1.5"/><circle cx="8" cy="20" r="1.5" fill="currentColor" opacity="0.4"/></svg>); }
 
-function KonnektLogo({ accent }: { accent: string }) {
-  return <img src="/logo.png" alt="Konnekt" style={{ width: 16, height: 16, objectFit: 'contain', borderRadius: 4 }} />;
-}
-
 // ─── Inject SDK-identical CSS ───
 function injectKktCSS(accent: string) {
   const id = 'kkt-playground-styles';
@@ -97,8 +93,11 @@ function injectKktCSS(accent: string) {
 .kkt-wallet-preview{width:56px;height:56px;border-radius:16px;overflow:hidden;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
 .kkt-wallet-preview img{width:100%;height:100%;object-fit:cover}
 .kkt-chain-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:8px}
-.kkt-footer{padding:8px 24px 12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.15)}
+.kkt-footer{padding:8px 24px 12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.15)}
+.kkt-footer-logo{width:16px;height:16px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kkt-footer-logo-text{color:#fff;font-size:9px;font-weight:800;line-height:1}
 .kkt-footer-text{font-size:11px;color:rgba(255,255,255,0.25)}
+.kkt-glow{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(100px);opacity:0.2;pointer-events:none;z-index:0}
 @keyframes kkt-fi{from{opacity:0}to{opacity:1}}
 @keyframes kkt-su{from{opacity:0;transform:translateY(16px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes kkt-sp{to{transform:rotate(360deg)}}
@@ -273,7 +272,9 @@ function CustomizeTab() {
             ))}
           </ul>
           <div className="kkt-footer">
-            <KonnektLogo accent={t.accent} />
+            <div className="kkt-footer-logo" style={{ background: isNone ? '#22C55E' : t.accent }}>
+              <span className="kkt-footer-logo-text">K</span>
+            </div>
             <span className="kkt-footer-text">Powered by Konnekt</span>
           </div>
           </div>{/* close inner z-index wrapper */}

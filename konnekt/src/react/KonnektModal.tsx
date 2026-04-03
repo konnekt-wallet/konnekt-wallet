@@ -7,6 +7,7 @@ import { ConnectingState } from '../ui/ConnectingState';
 import { SuccessState } from '../ui/SuccessState';
 import { ErrorState } from '../ui/ErrorState';
 import { NetworkSwitcher } from '../ui/NetworkSwitcher';
+import { Footer } from '../ui/Footer';
 import { CloseIcon } from '../ui/icons';
 import { resolveTheme, injectStyles } from '../ui/styles';
 
@@ -28,7 +29,6 @@ export function KonnektModal({ theme }: Props) {
     injectStyles(resolved);
   }, [resolved]);
 
-  // Determine current view
   let view: View = 'list';
   if (state.status === 'connecting') view = 'connecting';
   else if (state.status === 'connected' && state.isModalOpen) view = 'success';
@@ -55,14 +55,12 @@ export function KonnektModal({ theme }: Props) {
 
   const handleClose = useCallback(() => {
     instance.closeModal();
-    // Reset state if not connected
     if (state.status !== 'connected') {
       setSelectedWallet(null);
       instance.store.setStatus('disconnected');
     }
   }, [instance, state.status]);
 
-  // Auto-close after successful connection
   useEffect(() => {
     if (view === 'success') {
       const timer = setTimeout(() => {
@@ -72,13 +70,12 @@ export function KonnektModal({ theme }: Props) {
     }
   }, [view, instance]);
 
-  // Smart default: if only one injected wallet, connect directly
   const injectedWallets = state.availableWallets.filter(
     (w) => w.type === 'injected' && w.installed
   );
 
   return (
-    <Modal isOpen={state.isModalOpen} onClose={handleClose}>
+    <Modal isOpen={state.isModalOpen} onClose={handleClose} accent={resolved.accent}>
       {resolved.backgroundImage && (
         <div
           className="kkt-modal-bg"
@@ -103,6 +100,7 @@ export function KonnektModal({ theme }: Props) {
             wallets={state.availableWallets}
             onSelect={handleSelect}
           />
+          <Footer accent={resolved.accent} />
         </>
       )}
 

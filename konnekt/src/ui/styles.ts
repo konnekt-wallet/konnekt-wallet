@@ -127,5 +127,10 @@ function css(t: Required<KonnektTheme>): string {
 @keyframes kkt-sp{to{transform:rotate(360deg)}}
 @keyframes kkt-pop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 @keyframes kkt-pu{0%,100%{opacity:1}50%{opacity:0.4}}
+.kkt-glow{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(100px);opacity:0.2;pointer-events:none;z-index:0}
+.kkt-footer{padding:8px 24px 12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.15)}
+.kkt-footer-logo{width:16px;height:16px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kkt-footer-logo-text{color:#fff;font-size:9px;font-weight:800;line-height:1}
+.kkt-footer-text{font-size:11px;color:rgba(255,255,255,0.25)}
 `;
 }

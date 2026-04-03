@@ -1,6 +1,6 @@
 {
   "name": "konnekt-wallet",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Clean web3 wallet connector — no web2 noise, just crypto. EIP-6963 + WalletConnect v2.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
