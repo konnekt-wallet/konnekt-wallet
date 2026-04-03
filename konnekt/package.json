@@ -1,0 +1,55 @@
+{
+  "name": "konnekt-wallet",
+  "version": "0.1.0",
+  "description": "Clean web3 wallet connector — no web2 noise, just crypto. EIP-6963 + WalletConnect v2.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "web3",
+    "wallet",
+    "connect",
+    "ethereum",
+    "eip-6963",
+    "walletconnect",
+    "react",
+    "metamask",
+    "dapp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/user/konnekt"
+  },
+  "homepage": "https://konnekt.dev",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "license": "MIT"
+}
