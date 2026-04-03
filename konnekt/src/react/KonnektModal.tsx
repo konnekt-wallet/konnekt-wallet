@@ -100,7 +100,7 @@ export function KonnektModal({ theme }: Props) {
             wallets={state.availableWallets}
             onSelect={handleSelect}
           />
-          <Footer accent={resolved.accent} />
+          <Footer />
         </>
       )}
 

@@ -93,9 +93,9 @@ function injectKktCSS(accent: string) {
 .kkt-wallet-preview{width:56px;height:56px;border-radius:16px;overflow:hidden;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
 .kkt-wallet-preview img{width:100%;height:100%;object-fit:cover}
 .kkt-chain-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:8px}
-.kkt-footer{padding:8px 24px 12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.15)}
-.kkt-footer-logo{width:16px;height:16px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.kkt-footer-logo-text{color:#fff;font-size:9px;font-weight:800;line-height:1}
+.kkt-footer{padding:8px 24px 12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.15);text-decoration:none;cursor:pointer;transition:opacity .15s}
+.kkt-footer:hover{opacity:0.8}
+.kkt-footer-logo{width:16px;height:16px;border-radius:4px;flex-shrink:0}
 .kkt-footer-text{font-size:11px;color:rgba(255,255,255,0.25)}
 .kkt-glow{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(100px);opacity:0.2;pointer-events:none;z-index:0}
 @keyframes kkt-fi{from{opacity:0}to{opacity:1}}
@@ -271,12 +271,10 @@ function CustomizeTab() {
               </li>
             ))}
           </ul>
-          <div className="kkt-footer">
-            <div className="kkt-footer-logo" style={{ background: isNone ? '#22C55E' : t.accent }}>
-              <span className="kkt-footer-logo-text">K</span>
-            </div>
+          <a className="kkt-footer" href="https://www.npmjs.com/package/konnekt-wallet" target="_blank" rel="noopener noreferrer">
+            <img className="kkt-footer-logo" src="data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='32' height='32' rx='8' fill='%2322C55E'/%3E%3Cpath d='M9 23V9h3.5v5.5L17.5 9H22l-6 7 6.5 7h-4.8l-4.2-5v5H9z' fill='white'/%3E%3C/svg%3E" alt="Konnekt" />
             <span className="kkt-footer-text">Powered by Konnekt</span>
-          </div>
+          </a>
           </div>{/* close inner z-index wrapper */}
         </div>
       </div>
