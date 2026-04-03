@@ -12,7 +12,7 @@ export function Hero() {
           <a href="#how-it-works" className="text-sm text-text-secondary hover:text-text-primary transition-colors">How it works</a>
           <a href="#features" className="text-sm text-text-secondary hover:text-text-primary transition-colors">Features</a>
           <a href="#code" className="text-sm text-text-secondary hover:text-text-primary transition-colors">Code</a>
-          <a href="https://github.com" className="text-[13px] font-medium text-text-primary glass px-4 py-2 rounded-xl hover:bg-white/[0.05] transition-colors">GitHub</a>
+          <a href="https://github.com/konnekt-wallet/konnekt-wallet" className="text-[13px] font-medium text-text-primary glass px-4 py-2 rounded-xl hover:bg-white/[0.05] transition-colors">GitHub</a>
         </div>
       </nav>
 
@@ -56,8 +56,8 @@ export function Hero() {
             Try the modal
           </a>
           <a href="#code" className="text-[15px] font-medium font-mono text-text-primary glass px-7 py-3.5 rounded-xl hover:bg-white/[0.05] transition-all flex items-center gap-2">
-            <span className="text-emerald-700 font-bold">{'>'}_</span>
-            View code
+            <span className="text-emerald-500 font-bold">{'>'}_</span>
+            npm i konnekt-wallet
           </a>
         </div>
       </div>

@@ -101,7 +101,7 @@ const session = await approval();`,
       'Subscribe/unsubscribe prevents memory leaks',
       'Only subscribed components re-render',
     ],
-    code: `import { KonnektProvider, useKonnekt } from 'konnekt';
+    code: `import { KonnektProvider, useKonnekt } from 'konnekt-wallet';
 
 function App() {
   return (

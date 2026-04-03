@@ -23,15 +23,15 @@ export function Footer() {
           </div>
           <div className="flex flex-col gap-2.5">
             <p className="text-xs font-semibold uppercase tracking-wider mb-1">Community</p>
-            <a href="https://github.com" className="text-sm text-text-secondary hover:text-text-primary transition-colors">GitHub</a>
+            <a href="https://github.com/konnekt-wallet/konnekt-wallet" className="text-sm text-text-secondary hover:text-text-primary transition-colors">GitHub</a>
             <a href="https://twitter.com" className="text-sm text-text-secondary hover:text-text-primary transition-colors">Twitter</a>
             <a href="https://discord.com" className="text-sm text-text-secondary hover:text-text-primary transition-colors">Discord</a>
           </div>
           <div className="flex flex-col gap-2.5">
             <p className="text-xs font-semibold uppercase tracking-wider mb-1">Install</p>
-            <code className="text-[13px] font-mono text-text-muted">npm i konnekt</code>
-            <code className="text-[13px] font-mono text-text-muted">yarn add konnekt</code>
-            <span className="text-[11px] text-text-muted italic">coming soon to npm</span>
+            <code className="text-[13px] font-mono text-text-muted">npm i konnekt-wallet</code>
+            <code className="text-[13px] font-mono text-text-muted">yarn add konnekt-wallet</code>
+            <code className="text-[13px] font-mono text-text-muted">pnpm add konnekt-wallet</code>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 {
   "name": "konnekt-wallet",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Clean web3 wallet connector — no web2 noise, just crypto. EIP-6963 + WalletConnect v2.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -31,14 +31,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/user/konnekt"
+    "url": "git+https://github.com/konnekt-wallet/konnekt-wallet.git"
   },
-  "homepage": "https://konnekt.dev",
+  "homepage": "https://github.com/konnekt-wallet/konnekt-wallet",
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "konnekt-wallet": "^0.1.1"
+  },
   "devDependencies": {
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",

@@ -1,124 +1,114 @@
-# Konnekt
+# konnekt-wallet
 
-Lightweight, no-bullshit wallet connector for EVM dApps. Pure injected wallet detection via EIP-6963. No WalletConnect, no social logins, no email wallets, no third-party services. Just your users' browser wallets.
+Clean web3 wallet connector. No web2 noise, just crypto.
 
-**Zero dependencies. Zero API keys. Zero subscriptions.**
+Liquid glass UI, EIP-6963 auto-detection, Solana support, signing, transactions, 6-param theming, ~48KB.
 
 ## Install
 
 ```bash
-npm install konnekt
+npm install konnekt-wallet
 ```
 
-## Quick Start
+## Usage
 
 ```tsx
-import { KonnektProvider, useKonnekt } from 'konnekt';
+import { KonnektProvider, useKonnekt } from 'konnekt-wallet';
 
 function App() {
   return (
-    <KonnektProvider config={{}}>
+    <KonnektProvider config={{
+      theme: { accent: '#22C55E' }
+    }}>
       <ConnectButton />
     </KonnektProvider>
   );
 }
 
 function ConnectButton() {
-  const { isConnected, address, chainId, openModal, disconnect } = useKonnekt();
+  const { isConnected, address, openModal, disconnect } = useKonnekt();
 
   if (isConnected) {
-    return (
-      <div>
-        <p>{address}</p>
-        <button onClick={disconnect}>Disconnect</button>
-      </div>
-    );
+    return <button onClick={disconnect}>{address?.slice(0, 6)}...</button>;
   }
-
   return <button onClick={openModal}>Connect Wallet</button>;
 }
 ```
 
-That's it. No project IDs, no config files, no dashboard signups.
+## Sign Messages
 
-## What it does
+```tsx
+const { signMessage } = useKonnekt();
 
-- Detects all installed browser wallets automatically via EIP-6963
-- Shows a clean modal with detected wallets
-- Connects with one click
-- Tracks account and chain changes in real-time
-- Provides React hooks for everything
+// Works with both EVM (personal_sign) and Solana wallets
+const signature = await signMessage('Hello from Konnekt!');
+```
 
-## What it doesn't do
+## Send Transactions
 
-- No WalletConnect (no relay servers, no QR codes)
-- No social logins (no Google, no Discord, no email)
-- No embedded wallets
-- No analytics, no tracking
-- No external API calls whatsoever
+```tsx
+const { sendTransaction } = useKonnekt();
 
-## Supported Wallets
+// EVM
+const hash = await sendTransaction({
+  to: '0x...',
+  value: '0x0',
+  data: '0x',
+});
 
-Any wallet that implements EIP-6963 (which is all modern wallets):
+// Solana — pass a Transaction object
+const sig = await sendTransaction(solanaTx);
+```
 
-MetaMask, Coinbase Wallet, Rabby, Phantom, Trust Wallet, OKX Wallet, Brave Wallet, Rainbow, Zerion, and more.
+## Raw Provider
 
-## Theming
+```tsx
+const { provider } = useKonnekt();
+
+// EVM: EIP-1193 provider
+// Solana: Phantom/Solflare/Backpack provider
+// Use for anything not covered by the helpers above
+```
+
+## Wallets
+
+**EVM** — MetaMask, Coinbase Wallet, Rabby, Phantom, Trust Wallet, OKX, Brave, and any EIP-6963 wallet.
+
+**Solana** — Phantom, Solflare, Backpack.
+
+## Theme
 
 ```tsx
 <KonnektProvider config={{
   theme: {
-    accent: '#15803d',
-    background: '#0F0F0F',
-    surface: '#1A1A1A',
-    text: '#F5F0EB',
-    border: '#2A2A2A',
-    radius: '16px',
-    backgroundImage: '/your-project-art.jpg', // optional bg for the modal
+    accent: '#8B5CF6',
+    backgroundImage: 'https://example.com/bg.jpg',
   }
 }}>
 ```
 
 ## API
 
-### `useKonnekt()`
-
-```ts
+```tsx
 const {
-  status,        // 'disconnected' | 'connecting' | 'connected' | 'error'
-  address,       // string | null
-  chainId,       // number | null
-  walletId,      // string | null (rdns of connected wallet)
-  error,         // string | null
-  isConnected,   // boolean
-  isConnecting,  // boolean
-  availableWallets, // WalletInfo[]
-  connect,       // (walletId: string) => Promise<void>
-  disconnect,    // () => void
-  openModal,     // () => void
-  closeModal,    // () => void
+  isConnected,       // boolean
+  isConnecting,      // boolean
+  address,           // string | null
+  chainId,           // number | null
+  walletId,          // string | null
+  error,             // string | null
+  availableWallets,  // WalletInfo[]
+  connectedWallet,   // WalletInfo | null
+  provider,          // raw EIP-1193 or Solana provider
+
+  connect,           // (walletId: string) => Promise<void>
+  disconnect,        // () => void
+  openModal,         // () => void
+  closeModal,        // () => void
+  signMessage,       // (message: string) => Promise<string>
+  sendTransaction,   // (tx: any) => Promise<string>
 } = useKonnekt();
 ```
-
-### `createKonnekt()` (vanilla JS)
-
-```ts
-import { createKonnekt } from 'konnekt';
-
-const konnekt = createKonnekt();
-
-konnekt.store.subscribe((state) => {
-  console.log(state.address, state.chainId);
-});
-
-await konnekt.connect('io.metamask');
-konnekt.disconnect();
-konnekt.destroy();
-```
-
-## Size
-
-~37KB ESM. Zero runtime dependencies. React 18+ as peer dep.
 
 ## License
 

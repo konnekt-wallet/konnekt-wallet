@@ -4,7 +4,7 @@ import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 const EXAMPLES = [
   {
     label: 'Basic Setup', file: 'App.tsx',
-    code: `import { KonnektProvider, useKonnekt } from 'konnekt';
+    code: `import { KonnektProvider, useKonnekt } from 'konnekt-wallet';
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function MyDApp() {
   },
   {
     label: 'Custom Theme', file: 'themed.tsx',
-    code: `import { KonnektProvider } from 'konnekt';
+    code: `import { KonnektProvider } from 'konnekt-wallet';
 
 const theme = {
   accent: '#15803d',
@@ -64,45 +64,48 @@ function App() {
 }`,
   },
   {
-    label: 'Advanced', file: 'advanced.tsx',
-    code: `import { useKonnekt } from 'konnekt';
+    label: 'Signing', file: 'signing.tsx',
+    code: `import { useKonnekt } from 'konnekt-wallet';
 
-function Dashboard() {
+function SignDemo() {
   const {
-    isConnected, isConnecting,
-    address, chainId, walletId, error,
-    availableWallets,
-    connect, disconnect, openModal,
+    isConnected, address,
+    signMessage, sendTransaction,
+    provider, // raw provider if you need it
   } = useKonnekt();
 
-  const connectMetaMask = () => connect('io.metamask');
+  const handleSign = async () => {
+    const sig = await signMessage('Hello from Konnekt!');
+    console.log('Signature:', sig);
+  };
 
-  const hasMetaMask = availableWallets.some(
-    w => w.id === 'io.metamask' && w.installed
-  );
+  const handleSend = async () => {
+    // EVM transaction
+    const hash = await sendTransaction({
+      to: '0x...',
+      value: '0x0',
+      data: '0x',
+    });
+    console.log('TX hash:', hash);
+
+    // Solana: pass a Transaction object
+    // const hash = await sendTransaction(solTx);
+  };
+
+  if (!isConnected) return <p>Connect first</p>;
 
   return (
     <div>
-      {error && <p className="error">{error}</p>}
-      {isConnected && (
-        <div>
-          <p>Address: {address}</p>
-          <p>Chain: {chainId}</p>
-          <p>Wallet: {walletId}</p>
-        </div>
-      )}
-      {hasMetaMask && !isConnected && (
-        <button onClick={connectMetaMask}>
-          Quick Connect (MetaMask)
-        </button>
-      )}
+      <p>{address}</p>
+      <button onClick={handleSign}>Sign Message</button>
+      <button onClick={handleSend}>Send TX</button>
     </div>
   );
 }`,
   },
   {
     label: 'Vanilla JS', file: 'vanilla.ts',
-    code: `import { createKonnekt } from 'konnekt';
+    code: `import { createKonnekt } from 'konnekt-wallet';
 
 const konnekt = createKonnekt({
   projectId: 'your-project-id',
@@ -172,8 +175,7 @@ export function CodeExample() {
 
         <div className="flex items-center gap-3 px-5 py-3.5 border-t border-border bg-black/20">
           <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">Install</span>
-          <code className="text-sm font-mono text-emerald-700 font-medium">npm install konnekt</code>
-          <span className="text-[11px] text-text-muted ml-auto">coming to npm soon</span>
+          <code className="text-sm font-mono text-emerald-500 font-medium">npm install konnekt-wallet</code>
         </div>
       </div>
     </section>

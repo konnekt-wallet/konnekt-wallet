@@ -1,8 +1,8 @@
-import type { KonnektConfig, WalletInfo } from '../types';
+import type { KonnektConfig, WalletInfo, EIP1193Provider } from '../types';
 import type { Store } from './store';
 import { createStore } from './store';
 import { startEIP6963Discovery, getProviderByRdns } from './eip6963';
-import { startSolanaDiscovery, connectSolanaWallet } from './solana';
+import { startSolanaDiscovery, connectSolanaWallet, getSolanaProvider } from './solana';
 
 export interface KonnektInstance {
   store: Store;
@@ -11,19 +11,23 @@ export interface KonnektInstance {
   openModal: () => void;
   closeModal: () => void;
   destroy: () => void;
+  /** Get the raw provider for the connected wallet */
+  getProvider: () => EIP1193Provider | any | null;
+  /** Sign a message with the connected wallet */
+  signMessage: (message: string) => Promise<string>;
+  /** Send a transaction (EVM: tx object, Solana: Transaction) */
+  sendTransaction: (tx: any) => Promise<string>;
 }
 
 export function createKonnekt(config: KonnektConfig = {}): KonnektInstance {
   const store = createStore();
   const cleanups: (() => void)[] = [];
 
-  // Separate lists merged on every update
   let evmWallets: WalletInfo[] = [];
   let solWallets: WalletInfo[] = [];
 
   function mergeAndUpdate() {
     const merged = [...evmWallets, ...solWallets.map((sw) => {
-      // Always try to get better icon from EVM version of same wallet
       const baseName = sw.name.replace(/\s*\(.*\)\s*/g, '').toLowerCase().trim();
       const evmMatch = evmWallets.find((ew) => ew.name.toLowerCase().includes(baseName));
       if (evmMatch?.icon) return { ...sw, icon: evmMatch.icon };
@@ -39,13 +43,25 @@ export function createKonnekt(config: KonnektConfig = {}): KonnektInstance {
         mergeAndUpdate();
       })
     );
-
     cleanups.push(
       startSolanaDiscovery((wallets) => {
         solWallets = wallets;
         mergeAndUpdate();
       })
     );
+  }
+
+  function getConnectedWallet(): WalletInfo | null {
+    const { walletId, availableWallets } = store.getState();
+    if (!walletId) return null;
+    return availableWallets.find((w) => w.id === walletId) ?? null;
+  }
+
+  function getProvider(): EIP1193Provider | any | null {
+    const wallet = getConnectedWallet();
+    if (!wallet) return null;
+    if (wallet.chain === 'solana') return getSolanaProvider(wallet.id);
+    return getProviderByRdns(wallet.id);
   }
 
   async function connect(walletId: string) {
@@ -83,6 +99,57 @@ export function createKonnekt(config: KonnektConfig = {}): KonnektInstance {
     }
   }
 
+  async function signMessage(message: string): Promise<string> {
+    const { status, address } = store.getState();
+    if (status !== 'connected' || !address) throw new Error('Not connected');
+
+    const wallet = getConnectedWallet();
+    if (!wallet) throw new Error('No wallet found');
+
+    if (wallet.chain === 'solana') {
+      const provider = getSolanaProvider(wallet.id);
+      if (!provider) throw new Error('Solana provider not found');
+      const encoded = new TextEncoder().encode(message);
+      const { signature } = await provider.signMessage(encoded, 'utf8');
+      // Convert Uint8Array to hex
+      return Array.from(signature as Uint8Array).map(b => b.toString(16).padStart(2, '0')).join('');
+    } else {
+      const provider = getProviderByRdns(wallet.id);
+      if (!provider) throw new Error('EVM provider not found');
+      const sig = await provider.request({
+        method: 'personal_sign',
+        params: [
+          `0x${Array.from(new TextEncoder().encode(message)).map(b => b.toString(16).padStart(2, '0')).join('')}`,
+          address,
+        ],
+      });
+      return sig as string;
+    }
+  }
+
+  async function sendTransaction(tx: any): Promise<string> {
+    const { status, address } = store.getState();
+    if (status !== 'connected' || !address) throw new Error('Not connected');
+
+    const wallet = getConnectedWallet();
+    if (!wallet) throw new Error('No wallet found');
+
+    if (wallet.chain === 'solana') {
+      const provider = getSolanaProvider(wallet.id);
+      if (!provider) throw new Error('Solana provider not found');
+      const { signature } = await provider.signAndSendTransaction(tx);
+      return signature as string;
+    } else {
+      const provider = getProviderByRdns(wallet.id);
+      if (!provider) throw new Error('EVM provider not found');
+      const hash = await provider.request({
+        method: 'eth_sendTransaction',
+        params: [{ from: address, ...tx }],
+      });
+      return hash as string;
+    }
+  }
+
   function disconnect() { store.reset(); }
   function destroy() { cleanups.forEach((fn) => fn()); disconnect(); }
 
@@ -90,5 +157,8 @@ export function createKonnekt(config: KonnektConfig = {}): KonnektInstance {
     store, connect, disconnect, destroy,
     openModal: () => store.openModal(),
     closeModal: () => store.closeModal(),
+    getProvider,
+    signMessage,
+    sendTransaction,
   };
 }
